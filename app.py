@@ -45,6 +45,61 @@ app.secret_key = os.getenv("APP_SECRET_KEY", "change-me")
 UPLOAD_FOLDER = "static/uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
+SMTP_EMAIL = os.getenv("SMTP_EMAIL", "")
+SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
+
+
+def ensure_email_verification_column():
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+    cursor.execute("PRAGMA table_info(users)")
+    cols = [row[1] for row in cursor.fetchall()]
+    if "is_verified" not in cols:
+        cursor.execute("ALTER TABLE users ADD COLUMN is_verified INTEGER DEFAULT 0")
+        conn.commit()
+    conn.close()
+
+
+def send_email(to_email, subject, body):
+    if not SMTP_EMAIL or not SMTP_PASSWORD:
+        return False, "SMTP credentials are not configured. Set SMTP_EMAIL and SMTP_PASSWORD in your environment."
+
+    try:
+        msg = MIMEText(body)
+        msg["Subject"] = subject
+        msg["From"] = SMTP_EMAIL
+        msg["To"] = to_email
+
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.starttls()
+        server.login(SMTP_EMAIL, SMTP_PASSWORD.replace(" ", ""))
+        server.sendmail(SMTP_EMAIL, to_email, msg.as_string())
+        server.quit()
+        return True, None
+    except Exception as e:
+        print(f"Email Error: {e}")
+        return False, str(e)
+
+
+def send_email_otp(to_email, otp):
+    return send_email(
+        to_email,
+        "Password Reset OTP - College Portal",
+        f"Your OTP for password reset is: {otp}"
+    )
+
+
+def send_verification_email(to_email, otp):
+    return send_email(
+        to_email,
+        "Verify Your College Portal Account",
+        f"Your verification OTP is: {otp}. Enter this code on the verification page to complete your registration."
+    )
+
+
+ensure_email_verification_column()
+
+
 # Login Page
 @app.route("/", methods=["GET", "POST"])
 def login():
@@ -64,7 +119,7 @@ def login():
         cursor = conn.cursor()
 
         cursor.execute("""
-            SELECT role FROM users
+            SELECT role, is_verified FROM users
             WHERE username=? AND password=?
         """, (username, password))
 
@@ -72,8 +127,11 @@ def login():
         conn.close()
 
         if user:
+            role, is_verified = user
+            if not is_verified:
+                return "Email not verified. Please verify your account before logging in."
             session["username"] = username
-            session["role"] = user[0]
+            session["role"] = role
             return redirect(url_for("dashboard"))
         else:
             return "Invalid Login"
@@ -101,45 +159,62 @@ def register():
 
         try:
             cursor.execute(
-                "INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, ?)",
-                (username, password, email, "student")
+                "INSERT INTO users (username, password, email, role, is_verified) VALUES (?, ?, ?, ?, ?)",
+                (username, password, email, "student", 0)
             )
             conn.commit()
         except sqlite3.IntegrityError:
             conn.close()
             return "Username already exists"
 
-        conn.close()
-        return redirect(url_for("login"))
+        otp = str(random.randint(100000, 999999))
+        session["verification_otp"] = otp
+        session["verification_email"] = email
+        session["verification_username"] = username
+
+        success, error_msg = send_verification_email(email, otp)
+        if success:
+            conn.close()
+            return redirect(url_for("verify_email"))
+        else:
+            conn.close()
+            return f"Error sending verification email: {error_msg}"
 
     return render_template("register.html")
 
+
+@app.route("/verify-email", methods=["GET", "POST"])
+def verify_email():
+    if "verification_otp" not in session:
+        return redirect(url_for("register"))
+
+    if request.method == "POST":
+        user_otp = request.form["otp"]
+        if user_otp == session["verification_otp"]:
+            email = session.get("verification_email")
+            username = session.get("verification_username")
+
+            conn = sqlite3.connect("database.db")
+            cursor = conn.cursor()
+            cursor.execute(
+                "UPDATE users SET is_verified=1 WHERE username=? AND email=?",
+                (username, email)
+            )
+            conn.commit()
+            conn.close()
+
+            session.pop("verification_otp", None)
+            session.pop("verification_email", None)
+            session.pop("verification_username", None)
+
+            return redirect(url_for("login"))
+        else:
+            return "Invalid verification code"
+
+    return render_template("verify_email.html")
+
+
 # --- FORGOT PASSWORD LOGIC ---
-
-SMTP_EMAIL = os.getenv("SMTP_EMAIL", "")
-SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
-
-
-def send_email_otp(to_email, otp):
-    if not SMTP_EMAIL or not SMTP_PASSWORD:
-        return False, "SMTP credentials are not configured. Set SMTP_EMAIL and SMTP_PASSWORD in your environment."
-
-    try:
-        msg = MIMEText(f"Your OTP for password reset is: {otp}")
-        msg['Subject'] = 'Password Reset OTP - College Portal'
-        msg['From'] = SMTP_EMAIL
-        msg['To'] = to_email
-
-        # Connect to Gmail SMTP Server
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.starttls()
-        server.login(SMTP_EMAIL, SMTP_PASSWORD.replace(" ", "")) # Removes spaces if you copied them
-        server.sendmail(SMTP_EMAIL, to_email, msg.as_string())
-        server.quit()
-        return True, None
-    except Exception as e:
-        print(f"Email Error: {e}")
-        return False, str(e)
 
 @app.route("/forgot-password", methods=["GET", "POST"])
 def forgot_password():

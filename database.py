@@ -11,7 +11,8 @@ def init_db():
             username TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL,
             role TEXT DEFAULT 'student',
-            email TEXT
+            email TEXT,
+            is_verified INTEGER DEFAULT 0
         )
     """)
 
