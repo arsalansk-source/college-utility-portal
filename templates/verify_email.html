@@ -11,9 +11,13 @@
 <div class="login-box">
     <h2>Verify Email</h2>
     <p>Enter the 6-digit code sent to your email.</p>
+    {% if message %}
+    <div class="message">{{ message }}</div>
+    {% endif %}
     <form method="POST">
         <input type="text" name="otp" placeholder="Enter 6-digit OTP" required>
         <button type="submit">Verify</button>
+        <button type="submit" name="resend" value="1" style="margin-top: 10px;">Resend OTP</button>
     </form>
 </div>
 

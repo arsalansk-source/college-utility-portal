@@ -188,7 +188,22 @@ def verify_email():
     if "verification_otp" not in session:
         return redirect(url_for("register"))
 
+    message = None
     if request.method == "POST":
+        if "resend" in request.form:
+            email = session.get("verification_email")
+            if not email:
+                return redirect(url_for("register"))
+
+            otp = str(random.randint(100000, 999999))
+            session["verification_otp"] = otp
+            success, error_msg = send_verification_email(email, otp)
+            if success:
+                message = "Verification code resent to your email."
+            else:
+                message = f"Error resending verification email: {error_msg}"
+            return render_template("verify_email.html", message=message)
+
         user_otp = request.form["otp"]
         if user_otp == session["verification_otp"]:
             email = session.get("verification_email")
@@ -209,9 +224,9 @@ def verify_email():
 
             return redirect(url_for("login"))
         else:
-            return "Invalid verification code"
+            message = "Invalid verification code"
 
-    return render_template("verify_email.html")
+    return render_template("verify_email.html", message=message)
 
 
 # --- FORGOT PASSWORD LOGIC ---
@@ -642,11 +657,27 @@ def manage_students():
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
     # Fetch all users who are NOT admins
-    cursor.execute("SELECT * FROM users WHERE role != 'admin'")
+    cursor.execute("SELECT id, username, password, email, role, is_verified FROM users WHERE role != 'admin'")
     users = cursor.fetchall()
     conn.close()
     
     return render_template("manage_students.html", users=users)
+
+@app.route("/student/<int:user_id>")
+def student_details(user_id):
+    if session.get("role") != "admin":
+        return redirect(url_for("dashboard"))
+
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, username, password, email, role, is_verified FROM users WHERE id=?", (user_id,))
+    user = cursor.fetchone()
+    conn.close()
+
+    if not user:
+        return "Student not found"
+
+    return render_template("student_details.html", user=user)
 
 @app.route("/delete-user/<int:id>")
 def delete_user(id):
