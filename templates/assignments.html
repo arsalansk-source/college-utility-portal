@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignments | Smart College Portal</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<h2>Assignments & Deadlines</h2>
+
+<a href="/dashboard">⬅ Back to Dashboard</a> |
+{% if session['role'] == 'admin' %}
+<a href="/add-assignment">➕ Add New Assignment</a>
+{% endif %}
+
+<hr>
+
+{% if assignments %}
+    <table class="timetable" style="width: 80%; margin: auto;">
+        <tr>
+            <th>Subject</th>
+            <th>Topic</th>
+            <th>Deadline</th>
+            <th>File</th>
+            {% if session['role'] == 'admin' %}
+            <th>Action</th>
+            {% endif %}
+        </tr>
+        {% for assign in assignments %}
+        <tr>
+            <td>{{ assign[1] }}</td>
+            <td>{{ assign[2] }}</td>
+            <td style="color: crimson; font-weight: bold;">{{ assign[3] }}</td>
+            <td>
+                {% if assign[4] %}
+                    <a href="/download/{{ assign[4] }}" style="color: blue;">⬇ Download</a>
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            {% if session['role'] == 'admin' %}
+            <td>
+                <a href="/delete-assignment/{{ assign[0] }}" onclick="return confirm('Delete this assignment?')">🗑 Delete</a>
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>No pending assignments. Great job!</p>
+{% endif %}
+
+</body>
+</html>

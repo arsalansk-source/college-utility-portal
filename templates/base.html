@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>{% block title %}Smart College Portal{% endblock %}</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+{% block page_header %}{% endblock %}
+
+<div class="container">
+    <button class="menu-toggle">☰</button>
+    <div class="overlay"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>College Portal</h2>
+        <a href="/dashboard">🏠 Dashboard</a>
+        <a href="/notes">📚 Notes</a>
+        <a href="/timetable">📅 Timetable</a>
+        <a href="/assignments">⏰ Assignments</a>
+        <a href="/notices">📢 Notices</a>
+        {% if session.get('role') == 'admin' %}
+        <a href="/manage-students">👥 Manage Students</a>
+        {% endif %}
+        
+        <a href="/help">
+            ❓ Help Center 
+            {% if pending_count and pending_count > 0 %}
+            <span style="background:red; color:white; padding:2px 6px; border-radius:50%; font-size:12px;">{{ pending_count }}</span>
+            {% endif %}
+        </a>
+        <div style="margin-left: 20px; font-size: 0.9em;">
+            <a href="/help?mode=complaint">↳ Complaint</a>
+            <a href="/help?mode=request">↳ Request</a>
+        </div>
+
+        <a href="/logout" class="logout">🚪 Logout</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+
+</div>
+
+<script>
+    const menuToggle = document.querySelector('.menu-toggle');
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.querySelector('.overlay');
+
+    if (menuToggle && sidebar && overlay) {
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('is-visible');
+            overlay.classList.toggle('is-visible');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('is-visible');
+            overlay.classList.remove('is-visible');
+        });
+    }
+</script>
+</body>
+</html>

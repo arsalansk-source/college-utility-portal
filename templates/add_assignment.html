@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Assignment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="login-box" style="max-width: 600px; margin: 2rem auto; text-align: left;">
+    <h2>Add New Assignment</h2>
+    <a href="/assignments" style="margin-bottom: 1rem; display: inline-block;">⬅ Back to Assignments</a>
+    <hr>
+    <form method="POST" enctype="multipart/form-data">
+        <label>Subject:</label>
+        <input type="text" name="subject" placeholder="e.g. Mathematics" required>
+    
+        <label>Topic / Title:</label>
+        <input type="text" name="title" placeholder="Assignment Title" required>
+    
+        <label>Deadline:</label>
+        <input type="date" name="deadline" required>
+    
+        <label>Attach File (Optional):</label>
+        <input type="file" name="assignment_file">
+    
+        <button type="submit">Add Assignment</button>
+    </form>
+</div>
+
+</body>
+</html>

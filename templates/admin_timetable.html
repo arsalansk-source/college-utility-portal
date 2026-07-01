@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Timetable</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="login-box" style="max-width: 600px; margin: 2rem auto; text-align: left;">
+    <h2>Admin – Add / Update Timetable</h2>
+    <a href="/dashboard">⬅ Back to Dashboard</a>
+    <hr>
+    
+    {% if message %}
+    <p style="color:green; background: #e6fffa; padding: 10px; border-radius: 5px;"><b>{{ message }}</b></p>
+    {% endif %}
+    
+    <form method="POST">
+    
+        <label>Branch:</label>
+        <select name="branch" required>
+            <option>CSE</option>
+            <option>ECE</option>
+            <option>ME</option>
+            <option>CE</option>
+        </select>
+    
+        <label>Year:</label>
+        <select name="year" required>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+        </select>
+    
+        <label>Semester:</label>
+        <select name="semester" required>
+            <option>1</option><option>2</option>
+            <option>3</option><option>4</option>
+            <option>5</option><option>6</option>
+        </select>
+    
+        <label>Day:</label>
+        <select name="day" required>
+            <option>Monday</option>
+            <option>Tuesday</option>
+            <option>Wednesday</option>
+            <option>Thursday</option>
+            <option>Friday</option>
+            <option>Saturday</option>
+        </select>
+    
+        <label>Period (1–7):</label>
+        <input type="number" name="period" min="1" max="7" required>
+    
+        <label>Subject:</label>
+        <input type="text" name="subject" required>
+    
+        <button type="submit">Add / Update</button>
+    </form>
+</div>
+
+</body>
+</html>

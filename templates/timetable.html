@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>College Timetable</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="login-box" style="max-width: 500px; margin: 30px auto;">
+    <h3>Select Class Details</h3>
+<form method="POST">
+    <label>Branch:</label>
+    <select name="branch" required>
+        <option value="">Select</option>
+        <option>CSE</option>
+        <option>ECE</option>
+        <option>ME</option>
+        <option>CE</option>
+    </select>
+
+    <label>Year:</label>
+    <select name="year" required>
+        <option value="">Select</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+    </select>
+
+    <label>Semester:</label>
+    <select name="semester" required>
+        <option value="">Select</option>
+        <option>1</option><option>2</option>
+        <option>3</option><option>4</option>
+        <option>5</option><option>6</option>
+    </select>
+
+    <button type="submit">View Timetable</button>
+</form>
+</div>
+
+<div style="width: 90%; max-width: 1200px; margin: auto; text-align: center;">
+<a href="/dashboard">⬅ Back to Dashboard</a>
+{% if session['role'] == 'admin' %}
+| <a href="/admin/timetable">✏️ Edit Timetable</a>
+{% endif %}
+<hr>
+
+<h2>Class Timetable</h2>
+{% if branch %}
+<p>
+    <strong>Branch:</strong> {{ branch }} |
+    <strong>Year:</strong> {{ year }} |
+    <strong>Semester:</strong> {{ semester }}
+</p>
+{% endif %}
+
+{% if timetable_data %}
+    <!-- timetable rows here -->
+{% endif %}
+
+<table class="timetable">
+    <tr>
+        <th>Day</th>
+        <th>10:00 - 10:50</th>
+        <th>10:50 - 11:40</th>
+        <th>11:40 - 12:30</th>
+        <th>12:30 - 1:20</th>
+        <th class="lunch">Lunch<br>1:20 - 2:00</th>
+        <th>2:00 - 2:50</th>
+        <th>2:50 - 3:40</th>
+        <th>3:40 - 4:30</th>
+    </tr>
+
+    {% for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] %}
+    <tr>
+        <td>{{ day }}</td>
+        <td>{{ timetable_data.get((day, 1), '') }}</td>
+        <td>{{ timetable_data.get((day, 2), '') }}</td>
+        <td>{{ timetable_data.get((day, 3), '') }}</td>
+        <td>{{ timetable_data.get((day, 4), '') }}</td>
+        <td class="lunch">Lunch</td>
+        <td>{{ timetable_data.get((day, 5), '') }}</td>
+        <td>{{ timetable_data.get((day, 6), '') }}</td>
+        <td>{{ timetable_data.get((day, 7), '') }}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+</div>
+
+</body>
+</html>

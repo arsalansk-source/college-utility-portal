@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Smart College Portal{% endblock %}
+
+{% block page_header %}
+<div>
+         <h1 class="head">Smart College Utility Portal<br>(KCEA) Armoor, NZB</h1>
+    </div>
+{% endblock %}
+
+{% block content %}
+<h1>Welcome</h1>
+<p>You are logged in as: <strong>{{ session.get('role', 'User')|upper }}</strong></p>
+ <!-- Infinite Scroll Carousel -->
+<div class="carousel-container">
+    <div class="carousel-track">
+        <!-- Original 6 Images -->
+        <div class="carousel-slide"><img src="/static/images/1.png" alt="Img 1"></div>
+        <div class="carousel-slide"><img src="/static/images/2.png" alt="Img 2"></div>
+        <div class="carousel-slide"><img src="/static/images/3.png" alt="Img 3"></div>
+        <div class="carousel-slide"><img src="/static/images/4.png" alt="Img 4"></div>
+        <div class="carousel-slide"><img src="/static/images/5.png" alt="Img 5"></div>
+        <div class="carousel-slide"><img src="/static/images/6.png" alt="Img 6"></div>
+        <!-- Duplicates for Seamless Loop -->
+        <div class="carousel-slide"><img src="/static/images/1.png" alt="Img 1"></div>
+        <div class="carousel-slide"><img src="/static/images/2.png" alt="Img 2"></div>
+        <div class="carousel-slide"><img src="/static/images/3.png" alt="Img 3"></div>
+        <div class="carousel-slide"><img src="/static/images/4.png" alt="Img 4"></div>
+        <div class="carousel-slide"><img src="/static/images/5.png" alt="Img 5"></div>
+        <div class="carousel-slide"><img src="/static/images/6.png" alt="Img 6"></div>
+    </div>
+</div>
+
+
+<div class="info-box">
+        <p><b>Kshatriya College of Engineering (KCEA)</b>, Armoor was established in 2001 under the aegis of Pandit Deendayal Upadyay Educational Society. It offers graduate programs in engineering and postgraduate programs in the streams of engineering, business administration and polytechnic. The college was established with an objective to impart quality education to students in the field of engineering, technology and management studies.
+
+KCEA is affiliated to Jawaharlal Nehru Technological University, Hyderabad
+It is approved by AICTE. It is an ISO 9001:2008 Certfied College
+The College is located about 30 kms from nizamabad
+The campus of the college is spread over 40 acres
+The faculties of the college is well qualified to set the standard of the college to a height</p>
+<h2 style="text-align:center;">KCEA Departments</h2>
+<ul style="text-align:left;">
+    <li>Department of Computer Science Engineering</li>
+    <li>Department of Civil Engineering</li>
+    <li>Department of Mechanical Engineering</li>
+    <li>Department of Electrical and Electronics Engineering</li>
+    <li>Department of Electronics and Communication Engineering</li>
+</ul>
+</div>
+{% endblock %}

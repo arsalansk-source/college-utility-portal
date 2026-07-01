@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Notes | Smart College Portal{% endblock %}
+
+{% block content %}
+<h1>Notes Upload & Download</h1>
+
+{% if session.get('role') == 'admin' %}
+<div class="upload-box">
+    <h3>Upload New Note</h3>
+    <form method="POST" enctype="multipart/form-data" class="upload-form">
+        <input type="text" name="subject" placeholder="Subject (e.g. DBMS)" required>
+        <input type="file" name="note" required>
+        <button type="submit">Upload</button>
+    </form>
+</div>
+<hr>
+{% endif %}
+
+<h3>Available Notes</h3>
+<table class="timetable" style="width: 100%;">
+    <tr>
+        <th>Subject</th>
+        <th>Filename</th>
+        <th>Date</th>
+        <th>Action</th>
+    </tr>
+    {% for note in notes %}
+    <tr>
+        <td>{{ note[2] }}</td>
+        <td>{{ note[1] }}</td>
+        <td>{{ note[3] }}</td>
+        <td>
+            <a href="/download/{{ note[1] }}" style="color: blue; font-weight: bold;">⬇ Download</a>
+            {% if session.get('role') == 'admin' %}
+             | <a href="/delete-note/{{ note[0] }}" onclick="return confirm('Delete this note?')" style="color: crimson;">🗑 Delete</a>
+            {% endif %}
+        </td>
+    </tr>
+    {% else %}
+    <tr>
+        <td colspan="4">No notes uploaded yet.</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

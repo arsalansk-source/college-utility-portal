@@ -1,0 +1,455 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap');
+
+/* Modern CSS Reset & Variables */
+:root {
+    --primary: #1e293b;       /* Slate 800 - Sidebar & Headers */
+    --primary-hover: #334155; /* Slate 700 */
+    --accent: #3b82f6;        /* Blue 500 - Links & Focus */
+    --accent-hover: #2563eb;  /* Blue 600 */
+    --success: #10b981;       /* Emerald 500 - Buttons */
+    --success-hover: #059669; /* Emerald 600 */
+    --danger: #ef4444;        /* Red 500 - Delete/Logout */
+    --danger-hover: #dc2626;  /* Red 600 */
+    --bg-body: #f1f5f9;       /* Slate 100 - Background */
+    --bg-card: #ffffff;       /* White - Cards */
+    --text-main: #1f2937;     /* Gray 800 */
+    --text-muted: #6b7280;    /* Gray 500 */
+    --border: #e2e8f0;        /* Slate 200 */
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --radius: 8px;
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--primary);
+    margin-top: 0;
+}
+
+a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: var(--accent-hover);
+}
+
+/* Header Banner */
+.head {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 2.5rem 1rem;
+    margin: 0;
+    font-size: 3rem;
+    font-weight: 900;
+    font-family: 'Montserrat', 'Segoe UI', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    text-shadow: 
+        0 1px 0 #ccc,
+        0 2px 0 #c9c9c9,
+        0 3px 0 #bbb,
+        0 4px 0 #b9b9b9,
+        0 5px 0 #aaa,
+        0 6px 1px rgba(0,0,0,.1),
+        0 0 5px rgba(0,0,0,.1),
+        0 1px 3px rgba(0,0,0,.3),
+        0 3px 5px rgba(0,0,0,.2),
+        0 5px 10px rgba(0,0,0,.25),
+        0 10px 10px rgba(0,0,0,.2),
+        0 20px 20px rgba(0,0,0,.15);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    border-bottom: 5px solid var(--accent);
+}
+
+/* Layout */
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar Navigation */
+.sidebar {
+    width: 260px;
+    background-color: var(--primary);
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    box-shadow: 4px 0 10px rgba(0,0,0,0.05);
+}
+
+.sidebar h2 {
+    color: white;
+    font-size: 1.2rem;
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 20px;
+}
+
+.sidebar a {
+    color: #cbd5e1; /* Slate 300 */
+    padding: 12px 15px;
+    margin-bottom: 5px;
+    border-radius: var(--radius);
+    transition: all 0.3s ease;
+    display: block;
+}
+
+.sidebar a:hover {
+    background-color: rgba(255,255,255,0.1);
+    color: white;
+    transform: translateX(5px);
+}
+
+.sidebar .logout {
+    margin-top: auto;
+    background-color: var(--danger);
+    color: white;
+    text-align: center;
+}
+
+.sidebar .logout:hover {
+    background-color: var(--danger-hover);
+    transform: none;
+}
+
+/* Main Content */
+.content {
+    flex-grow: 1;
+    padding: 40px;
+    overflow-y: auto;
+}
+
+/* Hamburger Menu Toggle & Overlay (Mobile-only by default) */
+.menu-toggle {
+    display: none;
+    position: fixed;
+    top: 0px;
+    left: 10px;
+    width: 45px;
+    height: 45px;
+    background: none;
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    z-index: 1001;
+    cursor: pointer;
+    font-size: 24px;
+    line-height: 45px;
+    text-align: center;
+    /* box-shadow: var(--shadow); */
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    inset: 0; /* top, right, bottom, left = 0 */
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+}
+
+/* Cards & Containers */
+.login-box, .notice-card, .dashboard, .upload-box {
+    background: var(--bg-card);
+    padding: 2rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.login-box {
+    max-width: 400px;
+    margin: 3rem auto;
+    text-align: center;
+}
+
+.upload-box {
+    text-align: center;
+}
+
+.upload-form {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.upload-form input {
+    margin: 0;
+    flex: 1;
+    min-width: 200px;
+}
+
+.upload-form button {
+    width: auto;
+    margin: 0;
+    padding: 10px 20px;
+}
+
+.notice-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Forms */
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0 16px;
+    display: inline-block;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* Buttons */
+button {
+    background-color: var(--success);
+    color: white;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    width: 100%;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+button:hover {
+    background-color: var(--success-hover);
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+/* Tables */
+.timetable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.timetable th, .timetable td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+.timetable th {
+    background-color: var(--primary);
+    color: white;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.timetable tr:hover {
+    background-color: #f8fafc;
+}
+
+.timetable tr:last-child td {
+    border-bottom: none;
+}
+
+.lunch {
+    background-color: #fff7ed !important;
+    color: #c2410c;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Landing Page List */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    background: var(--bg-card);
+    margin: 10px auto;
+    padding: 15px;
+    max-width: 600px;
+    border-radius: var(--radius);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    text-align: center;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.content, .login-box {
+    animation: fadeIn 0.6s ease-out;
+}
+
+.info-box {
+    background-color: #e0f2fe; /* Lighter blue, more modern */
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    margin-top: 2rem;
+    border-left: 5px solid var(--accent);
+    box-shadow: var(--shadow);
+}
+
+/* --- Image Carousel Styles --- */
+.carousel-container {
+    width: 100%;
+    overflow: hidden; /* Hides the scrollbar */
+    padding: 20px 0;
+    position: relative;
+}
+
+.carousel-track {
+    display: flex;
+    /* Width calculation: 12 items total. We want 3 visible. 
+       So track width = (100% / 3) * 12 = 400% */
+    width: 400%;
+    animation: scroll 20s linear infinite;
+}
+
+.carousel-slide {
+    width: calc(100% / 12); /* Each item is 1/12th of the track */
+    padding: 15px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.carousel-slide img {
+    width: 100%;
+    height: 200px; /* Fixed height for uniformity */
+    object-fit: cover;
+    border-radius: 15px;
+    /* Best Frame Style: White border + Shadow */
+    border: 6px solid #ffffff;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    background-color: #fff;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy transition */
+}
+
+/* Hover Effects */
+.carousel-slide:hover img {
+    transform: scale(1.1) translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    border-color: var(--accent);
+    z-index: 10;
+}
+
+/* Animation Keyframes */
+@keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); } /* Move half the track (the first 6 images) */
+}
+
+/* Pause on Hover */
+.carousel-container:hover .carousel-track {
+    animation-play-state: paused;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 1000;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+        width: 280px;
+        /* Revert to vertical layout from desktop */
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: 20px;
+    }
+    .sidebar.is-visible {
+        transform: translateX(0);
+    }
+
+    .sidebar a {
+        margin: 5px 0;
+        font-size: 1rem;
+    }
+
+    .content {
+        padding: 20px 15px;
+    }
+
+    .head {
+        font-size: 1.5rem;
+        letter-spacing: 1px;
+        padding: 4rem 1rem 1.5rem 1rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .overlay.is-visible {
+        display: block;
+    }
+
+    .login-box {
+        width: 90%;
+        margin: 1.5rem auto;
+        padding: 1.5rem;
+    }
+
+    /* Make all tables horizontally scrollable on mobile */
+    .timetable {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap; /* Prevents table cell content from wrapping */
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    }
+
+    /* Carousel on mobile: show 1 image at a time */
+    .carousel-track {
+        /* Width: (100% container / 1 image) * 12 total slides = 1200% */
+        width: 1200%;
+    }
+
+    .carousel-slide img {
+        height: 180px;
+    }
+}

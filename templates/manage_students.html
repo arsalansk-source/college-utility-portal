@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Students{% endblock %}
+
+{% block content %}
+<h1>Manage Students</h1>
+<p>View and manage registered students.</p>
+
+<table class="timetable">
+    <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Action</th>
+    </tr>
+    {% for user in users %}
+    <tr>
+        <td>{{ user[0] }}</td>
+        <td>{{ user[1] }}</td>
+        <td>{{ user[4] if user[4] else 'N/A' }}</td>
+        <td>{{ user[3] }}</td>
+        <td>
+            <a href="/delete-user/{{ user[0] }}" onclick="return confirm('Are you sure you want to delete this user?')" style="color: crimson; font-weight: bold;">🗑 Delete</a>
+        </td>
+    </tr>
+    {% else %}
+    <tr>
+        <td colspan="5">No students found.</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

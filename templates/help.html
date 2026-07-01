@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Help Center</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"> 
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<h2>Help Center (Complaint & Request)</h2>
+<a href="/dashboard">⬅ Back to Dashboard</a>
+<hr>
+
+{% if session.get('role') != 'admin' %}
+<div class="login-box" style="margin: 20px auto; width: 80%;">
+    <h3>Submit a New Issue</h3>
+    <form method="POST">
+        <label>Type:</label><br>
+        <input type="radio" name="type" value="complaint" {% if mode == 'complaint' %}checked{% endif %} required> ⚠️ Complaint
+        <input type="radio" name="type" value="request" {% if mode == 'request' %}checked{% endif %}> 🙏 Request
+        <br><br>
+        
+        <textarea name="message" placeholder="Describe your issue or request here..." required style="width: 100%; height: 100px;"></textarea>
+        <br><br>
+        <button type="submit">Submit</button>
+    </form>
+</div>
+{% endif %}
+
+<h3>
+    {% if session.get('role') == 'admin' %}
+        All Requests (Admin View)
+    {% else %}
+        Your History
+    {% endif %}
+</h3>
+
+<table class="timetable" style="width: 90%; margin: auto;">
+    <tr>
+        <th>Date</th>
+        <th>Type</th>
+        <th>User</th>
+        <th>Message</th>
+        <th>Status</th>
+        {% if session.get('role') == 'admin' %}
+        <th>Action</th>
+        {% endif %}
+    </tr>
+    {% for req in requests %}
+    {# Safety check for tuple length #}
+    {% set status_val = req[4] if (req|length > 4 and req[4]) else 'pending' %}
+    {% set date_val = req[5] if req|length > 5 else '' %}
+    {% set status_color = 'orange' if status_val|lower == 'pending' else 'green' %}
+    <tr>
+        <td>{{ date_val }}</td>
+        <td>{{ req[2]|upper }}</td>
+        <td>{{ req[1] }}</td>
+        <td style="text-align: left; max-width: 300px; word-wrap: break-word;">{{ req[3] }}</td>
+        <td style="font-weight: bold; color: {{ status_color }};">
+            {{ status_val|upper }}
+        </td>
+        {% if session.get('role') == 'admin' %}
+        <td>
+            {% if status_val|lower == 'pending' %}
+            <a href="/help/resolve/{{ req[0] if req|length > 0 else 0 }}" style="color: green;">✔ Mark Solved</a>
+            {% else %}
+            <span style="color: gray;">Solved</span>
+            {% endif %}
+        </td>
+        {% endif %}
+    </tr>
+    {% else %}
+    {% set colspan_val = 6 if session.get('role') == 'admin' else 5 %}
+    <tr><td colspan="{{ colspan_val }}">No records found.</td></tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>
