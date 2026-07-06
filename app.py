@@ -2,10 +2,13 @@ import os
 import sqlite3
 import smtplib
 import random
+import traceback
 from email.mime.text import MIMEText
 from datetime import datetime
 from werkzeug.utils import secure_filename
 from flask import Flask, render_template, request, redirect, url_for, session
+from database import get_db_path, init_db
+
 app = Flask(__name__)
 
 
@@ -26,6 +29,19 @@ def load_env_file():
 load_env_file()
 
 
+_original_sqlite_connect = sqlite3.connect
+
+
+def sqlite_connect(*args, **kwargs):
+    if args and args[0] == "database.db":
+        args = (get_db_path(),)
+    return _original_sqlite_connect(*args, **kwargs)
+
+
+sqlite3.connect = sqlite_connect
+init_db()
+
+
 def get_user(username, password):
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
@@ -44,20 +60,12 @@ app.secret_key = os.getenv("APP_SECRET_KEY", "change-me")
 
 UPLOAD_FOLDER = "static/uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+# Ensure upload folder exists (use absolute path based on this file)
+uploads_abs = os.path.join(os.path.dirname(__file__), UPLOAD_FOLDER)
+os.makedirs(uploads_abs, exist_ok=True)
 
 SMTP_EMAIL = os.getenv("SMTP_EMAIL", "")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
-
-
-def ensure_email_verification_column():
-    conn = sqlite3.connect("database.db")
-    cursor = conn.cursor()
-    cursor.execute("PRAGMA table_info(users)")
-    cols = [row[1] for row in cursor.fetchall()]
-    if "is_verified" not in cols:
-        cursor.execute("ALTER TABLE users ADD COLUMN is_verified INTEGER DEFAULT 0")
-        conn.commit()
-    conn.close()
 
 
 def send_email(to_email, subject, body):
@@ -97,7 +105,11 @@ def send_verification_email(to_email, otp):
     )
 
 
-ensure_email_verification_column()
+# Global error handler to log unexpected exceptions to the server logs
+@app.errorhandler(Exception)
+def handle_unexpected_error(e):
+    app.logger.exception("Unhandled exception occurred: %s", e)
+    return "Internal Server Error", 500
 
 
 # Login Page
@@ -623,11 +635,11 @@ def help_page():
     # View Logic
     requests_list = []
     if session.get("role") == "admin":
-        cursor.execute("SELECT * FROM help_requests ORDER BY id DESC")
+        cursor.execute("SELECT id, username, type, message, created_at, status FROM help_requests ORDER BY id DESC")
         requests_list = cursor.fetchall()
     else:
         # Student sees their own history
-        cursor.execute("SELECT * FROM help_requests WHERE username=? ORDER BY id DESC", (session["username"],))
+        cursor.execute("SELECT id, username, type, message, created_at, status FROM help_requests WHERE username=? ORDER BY id DESC", (session["username"],))
         requests_list = cursor.fetchall()
     
     conn.close()
