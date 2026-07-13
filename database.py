@@ -19,18 +19,15 @@ def get_db_path():
 
 
 def get_db_connection():
-    """Return a psycopg2 connection using DATABASE_URL environment variable."""
-    db_url = os.environ.get("DATABASE_URL")
-    print(f"Connecting to database. String exists: {bool(os.environ.get('DATABASE_URL'))}")
-
-    if not db_url:
-        db_url = "postgresql://postgres.hefdjjpgijuanqkdspor:Arsalan_9848__@://supabase.com"
-        print("System fallback triggered: Connecting directly via hardcoded pooler URI string.")
-
-    if db_url.startswith("postgres://"):
-        db_url = db_url.replace("postgres://", "postgresql://", 1)
-
-    return psycopg2.connect(db_url)
+    # Force direct connection parameters to override local Unix socket searches
+    return psycopg2.connect(
+        host="://supabase.com",
+        port=6543,
+        database="postgres",
+        user="postgres.hefdjjpgijuanqkdspor",
+        password="Arsalan_9848__",
+        sslmode="require"
+    )
 
 
 def ensure_column(conn, table_name, column_name, column_definition):
