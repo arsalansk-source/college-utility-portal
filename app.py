@@ -5,28 +5,16 @@ import random
 import traceback
 from email.mime.text import MIMEText
 from datetime import datetime
+from pathlib import Path
+from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
 from flask import Flask, render_template, request, redirect, url_for, session
 from database import get_db_path, init_db, get_db_connection
 
 app = Flask(__name__)
 
-
-def load_env_file():
-    env_path = os.path.join(os.path.dirname(__file__), ".env")
-    if not os.path.exists(env_path):
-        return
-
-    with open(env_path, "r", encoding="utf-8") as fh:
-        for line in fh:
-            line = line.strip()
-            if not line or line.startswith("#") or "=" not in line:
-                continue
-            key, value = line.split("=", 1)
-            os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
-
-
-load_env_file()
+# Load .env without overriding existing system environment variables.
+load_dotenv(override=False)
 init_db()
 
 

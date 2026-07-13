@@ -16,9 +16,13 @@ def get_db_path():
 
 def get_db_connection():
     """Return a psycopg2 connection using DATABASE_URL environment variable."""
-    db_url = os.getenv("DATABASE_URL")
+    db_url = os.environ.get("DATABASE_URL")
+    print(f"Connecting to database. String exists: {bool(os.environ.get('DATABASE_URL'))}")
     if not db_url:
         raise RuntimeError("DATABASE_URL is not set. Set it to your PostgreSQL connection string.")
+
+    if db_url.lower().startswith("postgres://"):
+        db_url = "postgresql://" + db_url[len("postgres://"):]
 
     return psycopg2.connect(db_url)
 
