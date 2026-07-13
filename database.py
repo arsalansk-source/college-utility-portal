@@ -19,9 +19,9 @@ def get_db_path():
 
 
 def get_db_connection():
-    # Force direct connection parameters to override local Unix socket searches
+    # Production connection using your exact, explicit Supabase hardware targets
     return psycopg2.connect(
-        host="://supabase.com",
+        host="aws-0-ap-northeast-1.pooler.supabase.com",
         port=6543,
         database="postgres",
         user="postgres.hefdjjpgijuanqkdspor",
