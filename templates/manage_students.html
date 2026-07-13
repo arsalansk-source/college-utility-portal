@@ -20,7 +20,7 @@
     <tr>
         <td>{{ user[0] }}</td>
         <td>{{ user[1] }}</td>
-        <td>{{ user[4] if user[4] else 'N/A' }}</td>
+        <td>{{ user[3] if user[3] else 'N/A' }}</td>
         <td>{{ user[2] }}</td>
         <td>{{ 'Yes' if user[5] == 1 else 'No' }}</td>
         <td>{{ user[4] }}</td>
@@ -31,7 +31,7 @@
     </tr>
     {% else %}
     <tr>
-        <td colspan="5">No students found.</td>
+        <td colspan="7">No students found.</td>
     </tr>
     {% endfor %}
 </table>

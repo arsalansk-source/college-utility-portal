@@ -9,20 +9,18 @@
 <body>
 
     <div class="login-box">
-        <h2>Student Login</h2>
+        <h2>Portal Login</h2>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Login as a student or administrator to access the portal features.</p>
 
         <form method="POST">
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>
             <button type="submit">Login</button>
-            <a href="/forgot-password" style="display:block; margin-top:10px;">Forgot Password?</a>
-
+            <a href="/forgot-password" style="display:block; margin-top:12px; color: var(--primary);">Forgot Password?</a>
         </form>
-        <p>
-    Don't have an account?
-    <a href="/register">Register here</a>
-</p>
-
+        <p style="margin-top:1.25rem; color: var(--text-muted);">
+            Don't have an account? <a href="/register">Register here</a>
+        </p>
     </div>
 
 </body>

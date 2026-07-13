@@ -1,5 +1,5 @@
-import os
-import sqlite3
+﻿import os
+import psycopg2
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -11,35 +11,31 @@ def get_db_path():
         if os.path.isabs(configured_path):
             return configured_path
         return str(BASE_DIR / configured_path)
-    return str(BASE_DIR / "database.db")
+    return None
 
 
 def get_db_connection():
-    db_path = get_db_path()
-    db_dir = os.path.dirname(db_path)
-    if db_dir and not os.path.exists(db_dir):
-        os.makedirs(db_dir, exist_ok=True)
-    conn = sqlite3.connect(db_path)
-    conn.row_factory = sqlite3.Row
-    return conn
+    """Return a psycopg2 connection using DATABASE_URL environment variable."""
+    db_url = os.getenv("DATABASE_URL")
+    if not db_url:
+        raise RuntimeError("DATABASE_URL is not set. Set it to your PostgreSQL connection string.")
+
+    return psycopg2.connect(db_url)
 
 
 def ensure_column(conn, table_name, column_name, column_definition):
     cursor = conn.cursor()
-    cursor.execute(f"PRAGMA table_info({table_name})")
-    columns = {row[1] for row in cursor.fetchall()}
-    if column_name not in columns:
-        cursor.execute(f"ALTER TABLE {table_name} ADD COLUMN {column_definition}")
+    cursor.execute(f"ALTER TABLE {table_name} ADD COLUMN IF NOT EXISTS {column_definition}")
+    cursor.close()
 
 
 def init_db():
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("PRAGMA foreign_keys = ON")
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             username TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL,
             role TEXT DEFAULT 'student',
@@ -50,7 +46,7 @@ def init_db():
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS notices (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             title TEXT NOT NULL,
             content TEXT NOT NULL,
             date TEXT NOT NULL
@@ -59,7 +55,7 @@ def init_db():
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS timetable_meta (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             branch TEXT,
             year TEXT,
             semester TEXT
@@ -68,18 +64,17 @@ def init_db():
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS timetable_slots (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            timetable_id INTEGER,
+            id SERIAL PRIMARY KEY,
+            timetable_id INTEGER REFERENCES timetable_meta(id),
             day TEXT,
             period INTEGER,
-            subject TEXT,
-            FOREIGN KEY(timetable_id) REFERENCES timetable_meta(id)
+            subject TEXT
         )
     """)
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS assignments (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             subject TEXT NOT NULL,
             title TEXT NOT NULL,
             deadline TEXT NOT NULL,
@@ -89,7 +84,7 @@ def init_db():
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS notes (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             filename TEXT NOT NULL,
             subject TEXT NOT NULL,
             upload_date TEXT NOT NULL
@@ -98,7 +93,7 @@ def init_db():
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS help_requests (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             username TEXT NOT NULL,
             type TEXT NOT NULL,
             message TEXT NOT NULL,
@@ -114,8 +109,21 @@ def init_db():
     ensure_column(conn, "help_requests", "status", "status TEXT DEFAULT 'pending'")
 
     conn.commit()
+
+    admin_user = os.getenv("ADMIN_USERNAME")
+    admin_pass = os.getenv("ADMIN_PASSWORD")
+    if admin_user and admin_pass:
+        cursor.execute("SELECT id FROM users WHERE username=%s", (admin_user,))
+        if not cursor.fetchone():
+            cursor.execute(
+                "INSERT INTO users (username, password, role, email, is_verified) VALUES (%s, %s, 'admin', %s, 1)",
+                (admin_user, admin_pass, f"{admin_user}@example.local")
+            )
+            conn.commit()
+
+    cursor.close()
     conn.close()
-    print(f"Database initialized successfully at {get_db_path()}.")
+    print("Database initialized successfully (PostgreSQL).")
 
 
 if __name__ == "__main__":

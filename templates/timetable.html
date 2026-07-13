@@ -41,7 +41,7 @@
 
 <div style="width: 90%; max-width: 1200px; margin: auto; text-align: center;">
 <a href="/dashboard">⬅ Back to Dashboard</a>
-{% if session['role'] == 'admin' %}
+{% if session.get('role') == 'admin' %}
 | <a href="/admin/timetable">✏️ Edit Timetable</a>
 {% endif %}
 <hr>

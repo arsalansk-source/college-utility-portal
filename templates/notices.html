@@ -11,7 +11,7 @@
 <h2>College Notices</h2>
 
 <a href="/dashboard">⬅ Back to Dashboard</a> |
-{% if session['role'] == 'admin' %}
+{% if session.get('role') == 'admin' %}
 <a href="/add-notice">➕ Add New Notice</a>
 {% endif %}
 

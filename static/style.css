@@ -21,17 +21,22 @@
 
 body {
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: var(--bg-body);
+    background: linear-gradient(180deg, #e2e8f0 0%, #f8fafc 40%, #ffffff 100%);
     color: var(--text-main);
     margin: 0;
     padding: 0;
     line-height: 1.6;
+    min-height: 100vh;
 }
 
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
     color: var(--primary);
     margin-top: 0;
+}
+
+h1, h2 {
+    letter-spacing: 0.02em;
 }
 
 a {
@@ -46,31 +51,25 @@ a:hover {
 
 /* Header Banner */
 .head {
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
     color: #ffffff;
     text-align: center;
-    padding: 2.5rem 1rem;
-    margin: 0;
-    font-size: 3rem;
-    font-weight: 900;
+    padding: 2rem 1rem;
+    margin: 0 0 1.5rem;
+    font-size: 2.5rem;
+    font-weight: 800;
     font-family: 'Montserrat', 'Segoe UI', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 4px;
-    text-shadow: 
-        0 1px 0 #ccc,
-        0 2px 0 #c9c9c9,
-        0 3px 0 #bbb,
-        0 4px 0 #b9b9b9,
-        0 5px 0 #aaa,
-        0 6px 1px rgba(0,0,0,.1),
-        0 0 5px rgba(0,0,0,.1),
-        0 1px 3px rgba(0,0,0,.3),
-        0 3px 5px rgba(0,0,0,.2),
-        0 5px 10px rgba(0,0,0,.25),
-        0 10px 10px rgba(0,0,0,.2),
-        0 20px 20px rgba(0,0,0,.15);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    border-bottom: 5px solid var(--accent);
+    letter-spacing: 0.25rem;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    border-bottom: 3px solid var(--accent);
+}
+
+.head small {
+    display: block;
+    font-size: 1rem;
+    letter-spacing: normal;
+    margin-top: 0.5rem;
+    color: rgba(255,255,255,0.75);
 }
 
 /* Layout */
@@ -81,23 +80,144 @@ a:hover {
 
 /* Sidebar Navigation */
 .sidebar {
-    width: 260px;
-    background-color: var(--primary);
+    width: 280px;
+    background-color: #0f172a;
     color: white;
-    padding: 20px;
+    padding: 24px 20px;
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-    box-shadow: 4px 0 10px rgba(0,0,0,0.05);
+    box-shadow: 4px 0 20px rgba(0,0,0,0.08);
 }
 
 .sidebar h2 {
     color: white;
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     text-align: center;
-    padding-bottom: 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    margin-bottom: 20px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    margin-bottom: 24px;
+    letter-spacing: 0.08em;
+}
+
+.sidebar h2 span {
+    display: block;
+    font-size: 0.85rem;
+    color: rgba(203, 213, 225, 0.75);
+    margin-top: 6px;
+    letter-spacing: normal;
+}
+
+.sidebar a {
+    color: #e2e8f0;
+    padding: 14px 18px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.sidebar a:hover {
+    background: rgba(148, 163, 184, 0.18);
+    color: #ffffff;
+    transform: translateX(2px);
+}
+
+.logout {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    background: rgba(248, 250, 252, 0.08);
+}
+
+.logout:hover {
+    background: rgba(248, 250, 252, 0.16);
+}
+
+.page-title {
+    font-size: 2.2rem;
+    margin-bottom: 0.35rem;
+    color: #111827;
+}
+
+.page-intro {
+    color: #475569;
+    margin-bottom: 2rem;
+}
+
+.overview-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 24px;
+    box-shadow: 0 18px 35px rgba(15, 23, 42, 0.08);
+    border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.card h3 {
+    margin: 0 0 0.75rem;
+    font-size: 1rem;
+    color: #475569;
+}
+
+.card p {
+    margin: 0;
+    color: #334155;
+    font-size: 0.96rem;
+}
+
+.section-card {
+    background: white;
+    padding: 1.75rem;
+    border-radius: 28px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 16px 30px rgba(15, 23, 42, 0.08);
+    border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.section-card h2 {
+    margin-top: 0;
+    font-size: 1.35rem;
+    color: #0f172a;
+}
+
+.section-card p {
+    color: #475569;
+    line-height: 1.8;
+}
+
+.section-card ul {
+    margin: 1rem 0 0;
+    padding-left: 1.15rem;
+    color: #475569;
+}
+
+.section-card li {
+    margin-bottom: 0.6rem;
+    list-style-type: disc;
+}
+
+@media (max-width: 1024px) {
+    .overview-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .overview-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .sidebar a {
@@ -173,9 +293,29 @@ a:hover {
 }
 
 .login-box {
-    max-width: 400px;
-    margin: 3rem auto;
+    max-width: 420px;
+    margin: 4rem auto;
     text-align: center;
+    position: relative;
+}
+
+.login-box::before {
+    content: 'KCEA Portal';
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+    color: white;
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+}
+
+.login-box h2 {
+    margin-top: 1.5rem;
+    font-size: 1.8rem;
 }
 
 .upload-box {
@@ -209,15 +349,20 @@ a:hover {
 /* Forms */
 input, select, textarea {
     width: 100%;
-    padding: 10px;
-    margin: 8px 0 16px;
+    padding: 14px 16px;
+    margin: 10px 0 18px;
     display: inline-block;
-    border: 1px solid var(--border);
+    border: 1px solid rgba(148, 163, 184, 0.45);
     border-radius: var(--radius);
     box-sizing: border-box;
     font-family: inherit;
     font-size: 1rem;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    background: #f8fafc;
+}
+
+input:hover, select:hover, textarea:hover {
+    transform: translateY(-1px);
 }
 
 input:focus, select:focus, textarea:focus {

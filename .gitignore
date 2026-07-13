@@ -7,4 +7,8 @@ __pycache__/
 *.py[cod]
 *.sqlite3
 *.db
+# Local archive folders and files should not be tracked in git
+archive_sqlite_scripts/
+# Local SQLite backup file is not tracked in git
+# Keep database.db as a local archive only
 .DS_Store

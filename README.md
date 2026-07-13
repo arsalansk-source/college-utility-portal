@@ -10,13 +10,22 @@ A functional Flask web application designed to streamline student life by managi
 
 ## 🛠️ Tech Stack
 - **Backend:** Python, Flask
-- **Database:** SQLite
+- **Database:** Supabase PostgreSQL
 - **Frontend:** HTML5, CSS3, Flask templates
 
 ## 💻 Local Setup Instructions
 1. Clone the repository.
 2. Create a virtual environment: `python -m venv .venv`
 3. Activate the environment and install dependencies.
-4. Create a `.env` file based on `.env.example` and add your keys.
-5. Initialize the database using the setup scripts.
-6. Run the app: `flask run` or `python app.py`
+4. Create a `.env` file based on `.env.example` and fill in your Supabase database URL and credentials.
+5. Run the app: `python app.py`
+
+## 🗂️ Local archive and security
+- `database.db` is a local SQLite archive only and should not be committed to GitHub.
+- `.env` is also excluded from version control.
+- Archived SQLite helper scripts are stored in `archive_sqlite_scripts/` and are not part of the active app.
+- Use `scripts/superbase.py` only for one-time migration of old SQLite user data into Supabase.
+
+## 🚀 Deployment
+- Your live app should connect to Supabase using `DATABASE_URL` in `.env`.
+- Do not store secrets or local database files in the repository.

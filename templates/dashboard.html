@@ -9,9 +9,39 @@
 {% endblock %}
 
 {% block content %}
-<h1>Welcome</h1>
-<p>You are logged in as: <strong>{{ session.get('role', 'User')|upper }}</strong></p>
- <!-- Infinite Scroll Carousel -->
+<h1 class="page-title">Welcome{{ ', ' + username|title if username else '' }}</h1>
+<p class="page-intro">
+    {% if username %}
+        Your academic dashboard is ready. Stay updated with today's classes, notices, and new resources.
+    {% else %}
+        You are viewing the public portal. <a href="/login">Login</a> or <a href="/register">Register</a> for student access.
+    {% endif %}
+</p>
+
+<div class="overview-grid">
+    <div class="card">
+        <h3>Access Level</h3>
+        <p><strong>{{ role|default('guest')|capitalize }}</strong></p>
+    </div>
+    <div class="card">
+        <h3>Pending Notices</h3>
+        <p><strong>{{ pending_count or 0 }}</strong> unread notice{{ 's' if (pending_count or 0) != 1 else '' }}</p>
+    </div>
+    <div class="card">
+        <h3>Campus Status</h3>
+        <p>All systems are operating normally. Check assignments and timetable for your current courses.</p>
+    </div>
+</div>
+
+<div class="section-card">
+    <h2>Today's Highlights</h2>
+    <ul>
+        <li>Latest announcements from faculty and administration</li>
+        <li>Upcoming assignment deadlines</li>
+        <li>Class schedule updates and room details</li>
+    </ul>
+</div>
+
 <div class="carousel-container">
     <div class="carousel-track">
         <!-- Original 6 Images -->

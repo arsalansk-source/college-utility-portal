@@ -12,7 +12,7 @@
 <a href="/dashboard">⬅ Back to Dashboard</a>
 <hr>
 
-{% if session.get('role') != 'admin' %}
+{% if user and user and role != 'admin' %}
 <div class="login-box" style="margin: 20px auto; width: 80%;">
     <h3>Submit a New Issue</h3>
     <form method="POST">
@@ -25,6 +25,11 @@
         <br><br>
         <button type="submit">Submit</button>
     </form>
+</div>
+{% elif not user %}
+<div class="login-box" style="margin: 20px auto; width: 80%; text-align: center;">
+    <h3>Login Required</h3>
+    <p>Please <a href="/login">login</a> or <a href="/register">register</a> to submit a complaint or request.</p>
 </div>
 {% endif %}
 
