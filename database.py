@@ -1,8 +1,12 @@
 ﻿import os
 import psycopg2
+from dotenv import load_dotenv
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
+
+# Load .env without overwriting existing system environment variables
+load_dotenv(override=False)
 
 
 def get_db_path():
@@ -18,11 +22,13 @@ def get_db_connection():
     """Return a psycopg2 connection using DATABASE_URL environment variable."""
     db_url = os.environ.get("DATABASE_URL")
     print(f"Connecting to database. String exists: {bool(os.environ.get('DATABASE_URL'))}")
-    if not db_url:
-        raise RuntimeError("DATABASE_URL is not set. Set it to your PostgreSQL connection string.")
 
-    if db_url.lower().startswith("postgres://"):
-        db_url = "postgresql://" + db_url[len("postgres://"):]
+    if not db_url:
+        db_url = "postgresql://postgres.hefdjjpgijuanqkdspor:Arsalan_9848__@://supabase.com"
+        print("System fallback triggered: Connecting directly via hardcoded pooler URI string.")
+
+    if db_url.startswith("postgres://"):
+        db_url = db_url.replace("postgres://", "postgresql://", 1)
 
     return psycopg2.connect(db_url)
 
